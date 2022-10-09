@@ -20,24 +20,31 @@ const scriptOfSample1 = (sample, SCRIPTS) => {
 }
 
 const scriptOfSample = (sample, SCRIPTS) => {
-    // find the name of the script that contains the given sample
-    // return the name of the script
-    // if no script contains the sample, return "No script found"
-    let retVal = "No script found";
-    SCRIPTS.forEach(script => {
-        if (script.ranges.some(range => sample >= range[0] && sample <= range[1])) {
-            retVal = script.name;
-        }
-    })
-    return retVal;
+    const foundScript = SCRIPTS.find(_ => _.ranges.some(range => sample.codePointAt(0) >= range[0] && sample.codePointAt(0) <= range[1]));
+    return foundScript ? foundScript.name : "unknown";
+};
+
+
+const scriptsInString = (string, SCRIPTS) => {
+    let retObj = {};
+    [...string].forEach(str => {
+        let currScriptName = scriptOfSample(str, SCRIPTS);
+        Object.hasOwn(retObj, currScriptName) ? retObj[currScriptName] += 1 : retObj[currScriptName] = 1
+    });
+    return retObj;
 }
 
 // console.log(SCRIPTS[3].ranges);
 // console.log(oldAndLiving(SCRIPTS));
 // console.log(numberOfCodes(SCRIPTS[3]))
 
-console.log(scriptOfSample("A", SCRIPTS), "Latin");
-console.log(scriptOfSample("英", SCRIPTS), "Han");
-console.log(scriptOfSample("я", SCRIPTS), "Cyrillic");
+// console.log(scriptOfSample("A", SCRIPTS), "Latin");
+// console.log(scriptOfSample("英", SCRIPTS), "Han");
+// console.log(scriptOfSample("я", SCRIPTS), "Cyrillic");
+// console.log(scriptOfSample(" ", SCRIPTS), "unknown");
+
+// console.log(scriptsInString('英国的狗说 "JavaScript", "тяв"', SCRIPTS))
+console.log(scriptsInString('https://pоstfinance.ch', SCRIPTS))
+
 
 module.exports = {scriptOfSample}
