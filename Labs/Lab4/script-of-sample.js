@@ -1,4 +1,3 @@
-require('./scripts.js')
 
 const oldAndLivingIter = (SCRIPTS) => {
     retArray = []
@@ -37,14 +36,12 @@ const scriptsInString = (string, SCRIPTS) => {
 // console.log(SCRIPTS[3].ranges);
 // console.log(oldAndLiving(SCRIPTS));
 // console.log(numberOfCodes(SCRIPTS[3]))
-
 // console.log(scriptOfSample("A", SCRIPTS), "Latin");
 // console.log(scriptOfSample("英", SCRIPTS), "Han");
 // console.log(scriptOfSample("я", SCRIPTS), "Cyrillic");
 // console.log(scriptOfSample(" ", SCRIPTS), "unknown");
-
 // console.log(scriptsInString('英国的狗说 "JavaScript", "тяв"', SCRIPTS))
-console.log(scriptsInString('https://pоstfinance.ch', SCRIPTS))
+// console.log(scriptsInString('https://pоstfinance.ch', SCRIPTS))
 
 
 module.exports = {scriptOfSample}

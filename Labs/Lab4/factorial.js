@@ -1,9 +1,18 @@
 const factorial = (numb) => {
+    if(numb === 0) {
+        return 1;
+    }
+
     let bigIntNumb = BigInt(numb);
-    let retValue = BigInt(true); // Sets retVal to 1
+    let retValue = BigInt(1); // Sets retVal to 1n
     for (bigIntNumb; bigIntNumb > 0n; bigIntNumb--) {
         retValue = bigIntNumb * retValue;
     }
+
+    if(typeof numb != 'bigint'){
+        retValue = Number(retValue);
+    }
+
     return retValue;
 }
 
