@@ -8,15 +8,21 @@ const process = require('process')
 fs.readFile("nexttick.js", () => {
   
   setTimeout(() => {
-    console.log('timeout')
+    console.log('1 timeout')
   }, 0)
   
   setImmediate(() => {
-    console.log('immediate')
+    console.log('2 immediate')
   })
   
   process.nextTick(() => {
-    console.log('nexttick')
+    console.log('3 nexttick')
   })
 
 })
+
+/*
+* Annahme:  1, 3, 2
+* Tatsache: 3, 2, 1
+* Warum?    tbd
+* */
