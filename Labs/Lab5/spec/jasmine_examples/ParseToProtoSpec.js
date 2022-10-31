@@ -1,5 +1,3 @@
-/*
-// Added tests here because I need to abegeben oder
 describe('ParseToProto checker', function () {
     const {parseToProto} = require("../../parse-to-proto.js");
     let proto = {};
@@ -20,24 +18,3 @@ describe('ParseToProto checker', function () {
     })
 
 })
-*/
-
-
-
-function parseToProto(unparsedJson, object) {
-    const parsedJson = parseJSON(unparsedJson);
-    Object.keys(parsedJson).forEach(key => object[key] = parsedJson[key]);
-    return object;
-}
-
-const parseJSON = (data) => JSON.parse(data);
-
-let proto = {category: "animal"}
-const data = '{"type": "cat", "name": "Mimi", "age": 3}';
-let obj = parseToProto(data, proto);
-
-console.log(obj.age);
-console.log(obj.category);
-
-
-module.exports = { parseToProto }
