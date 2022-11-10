@@ -30,4 +30,4 @@ function csv2json() {
     });
 }
 
-csv2json();
+csv2json(); 
