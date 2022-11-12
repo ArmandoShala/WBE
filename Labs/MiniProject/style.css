@@ -9,11 +9,15 @@ div {
     outline: 1px solid black;
 }
 
+.row {
+    display: flex;
+}
+
 .board .field {
     border: 1px solid black;
     width: 12vw;
     height: 12vw;
-    float: left;
+    display: flex;
     /*display: none;*/
 }
 

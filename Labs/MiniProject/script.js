@@ -1,0 +1,14 @@
+function elt (type, attrs, ...children) {
+    let node = document.createElement(type)
+    Object.keys(attrs).forEach(key => {
+        node.setAttribute(key, attrs[key])
+    })
+    for (let child of children) {
+        if (typeof child != "string") node.appendChild(child)
+        else node.appendChild(document.createTextNode(child))
+    }
+    return node
+}
+
+document.getElementsByClassName("board")[0].appendChild(elt("div", {id: "container"}, "Hello World!"))
+console.log("Hello World!")
