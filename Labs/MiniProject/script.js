@@ -1,3 +1,5 @@
+let state = undefined;
+
 function elt(type, attrs, ...children) {
     let node = document.createElement(type)
     Object.keys(attrs).forEach(key => {
@@ -10,34 +12,92 @@ function elt(type, attrs, ...children) {
     return node
 }
 
-function initGameBoard(rows = 6, cols = 7) {
-    let board = elt("div", {class: "board"})
-    for (i = 1; i <= rows; i++) {
-        let row = elt("div", {class: "row"})
-        for (j = 1; j <= cols; j++) {
-            let field = elt("div", {class: "field"})
-            row.appendChild(field)
-        }
-        board.appendChild(row)
-    }
-    return board
+//
+// <div className="row">-->
+//     <!--        <div class="field">-->
+//     <!--            <div class="blue piece"></div>-->
+//     <!--        </div>-->
+//     <!--        <div class="field"></div>-->
+//     <!--        <div class="field"></div>-->
+//     <!--        <div class="field"></div>-->
+//     <!--        <div class="field"></div>-->
+//     <!--        <div class="field"></div>-->
+//     <!--        <div class="field"></div>-->
+//     <!--    </div>-->
+
+showBoard = () => {
+    const board = document.getElementsByClassName("board")[0]
+    // for (let rows = 0; rows < state.length; rows++) {
+    //     const row = elt("div", {class: "row"})
+    //     for (let cols = 0; cols < state[rows].length; cols++) {
+    //         const classes = "field"
+    //         const field = elt("div", {"class": classes});
+    //         if ("rb".includes(state[rows][cols]) && state[rows][cols] !== "") {
+    //             const colorClass = state[rows][cols] === "r" ? "red" : "blue"
+    //             const piece = elt("div", {class: colorClass + " piece"})
+    //             field.appendChild(piece)
+    //         }
+    //         row.appendChild(field);
+    //     }
+    //     board.appendChild(row);
+    // }
+    // do the same as above but for in functional style
+    // const board = document.getElementsByClassName("board")[0]
+    const rows = state.map(row => {
+        const fields = row.map(field => {
+            const classes = "field"
+            const fieldElement = elt("div", {"class": classes});
+            if (field !== "" && "rb".includes(field)) {
+                const colorClass = field === "r" ? "red" : "blue"
+                const piece = elt("div", {class: colorClass + " piece"})
+                fieldElement.appendChild(piece)
+            }
+            return fieldElement
+        })
+        return elt("div", {class: "row"}, ...fields)
+    })
+    board.innerHTML = ""
+    board.append(...rows)
 }
 
-function addGamePiecesAtRandomPosition(color) {
-    let piece = elt("div", {class: color + " piece"})
-    let board = document.getElementsByClassName("board")[0]
-    let row = board.children[Math.floor(Math.random() * board.children.length)]
-    let field = row.children[Math.floor(Math.random() * row.children.length)]
-    if (field.children.length !== 0) {
-        addGamePiecesAtRandomPosition(color)
-    }
-    field.appendChild(piece)
+//set color of field
+function setColorOfField(row, col) {
+
+}
+
+function initGame() {
+    document.body.appendChild(elt("div", {class: "board"}))
+    initState()
+    showBoard()
+}
+
+/**
+ * Insert a figure of the color at the given position. If the randomly
+ * choosen position is already occupied, then clear the cell.
+ * @param color
+ */
+function insertOrRemoveFigureAtRandomPlace(color) {
+    const row = Math.floor(Math.random() * state.length)
+    const col = Math.floor(Math.random() * state[0].length)
+    state[row][col] = state[row][col] === "" ? color : ""
+}
+
+
+
+initState = (rows = 6, cols = 7) => {
+    state = Array(rows).fill('').map(_ => Array(cols).fill(''))
+    insertOrRemoveFigureAtRandomPlace("r")
+    insertOrRemoveFigureAtRandomPlace("b")
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    document.body.appendChild(initGameBoard())
-    window.localStorage.setItem("coord1", "tbd")
-    addGamePiecesAtRandomPosition("red")
-    addGamePiecesAtRandomPosition("blue")
+    initGame()
+
+    setInterval(() => {
+        insertOrRemoveFigureAtRandomPlace("r")
+        insertOrRemoveFigureAtRandomPlace("b")
+        showBoard()
+    }, 1000)
+
 });
 
