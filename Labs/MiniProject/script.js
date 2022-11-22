@@ -1,4 +1,6 @@
 let state = undefined;
+let nextPlayer = undefined
+let board = undefined;
 
 function elt(type, attrs, ...children) {
     let node = document.createElement(type)
@@ -12,41 +14,11 @@ function elt(type, attrs, ...children) {
     return node
 }
 
-//
-// <div className="row">-->
-//     <!--        <div class="field">-->
-//     <!--            <div class="blue piece"></div>-->
-//     <!--        </div>-->
-//     <!--        <div class="field"></div>-->
-//     <!--        <div class="field"></div>-->
-//     <!--        <div class="field"></div>-->
-//     <!--        <div class="field"></div>-->
-//     <!--        <div class="field"></div>-->
-//     <!--        <div class="field"></div>-->
-//     <!--    </div>-->
-
 showBoard = () => {
-    const board = document.getElementsByClassName("board")[0]
-    // for (let rows = 0; rows < state.length; rows++) {
-    //     const row = elt("div", {class: "row"})
-    //     for (let cols = 0; cols < state[rows].length; cols++) {
-    //         const classes = "field"
-    //         const field = elt("div", {"class": classes});
-    //         if ("rb".includes(state[rows][cols]) && state[rows][cols] !== "") {
-    //             const colorClass = state[rows][cols] === "r" ? "red" : "blue"
-    //             const piece = elt("div", {class: colorClass + " piece"})
-    //             field.appendChild(piece)
-    //         }
-    //         row.appendChild(field);
-    //     }
-    //     board.appendChild(row);
-    // }
-    // do the same as above but for in functional style
-    // const board = document.getElementsByClassName("board")[0]
-    const rows = state.map(row => {
-        const fields = row.map(field => {
+    const rows = state.map((row, rowIndex) => {
+        const fields = row.map((field, fieldIndex) => {
             const classes = "field"
-            const fieldElement = elt("div", {"class": classes});
+            const fieldElement = elt("div", {"class": classes, "data-row": rowIndex, "data-col": fieldIndex});
             if (field !== "" && "rb".includes(field)) {
                 const colorClass = field === "r" ? "red" : "blue"
                 const piece = elt("div", {class: colorClass + " piece"})
@@ -60,44 +32,72 @@ showBoard = () => {
     board.append(...rows)
 }
 
-//set color of field
-function setColorOfField(row, col) {
-
-}
-
 function initGame() {
-    document.body.appendChild(elt("div", {class: "board"}))
+    board = document.getElementsByClassName("board")[0]
     initState()
     showBoard()
+    evaluateNextPlayer()
 }
 
 /**
  * Insert a figure of the color at the given position. If the randomly
  * choosen position is already occupied, then clear the cell.
  * @param color
+ * @deprecated use evaluateClickedField instead
  */
 function insertOrRemoveFigureAtRandomPlace(color) {
+    // this method is not used in the current version of the game, but it may be useful in the future to implement a bot
     const row = Math.floor(Math.random() * state.length)
     const col = Math.floor(Math.random() * state[0].length)
-    state[row][col] = state[row][col] === "" ? color : ""
+    state[row][col] = state[row][col] === "" ? color[0] : ""
 }
-
-
 
 initState = (rows = 6, cols = 7) => {
     state = Array(rows).fill('').map(_ => Array(cols).fill(''))
-    insertOrRemoveFigureAtRandomPlace("r")
-    insertOrRemoveFigureAtRandomPlace("b")
+}
+
+evaluateNextPlayer = () => {
+    nextPlayer = board.getAttribute("data-nextPlayer") === "red" ? "blue" : "red"
+    document.getElementById("nextPlayer").innerHTML = nextPlayer;
+    document.getElementById("nextPlayer").style.color = nextPlayer;
+}
+
+evaluateClickedField = (row, col) => {
+    if (state[row][col] !== "") {
+        alert("Field is already occupied!");
+        return;
+    }
+
+    // fixme: optimize this loop
+    for (let i = state.length - 1; i >= 0; i--) {
+        if (state[i][col] === "") {
+            state[i][col] = nextPlayer[0];
+            break;
+        }
+    }
+
+    board.setAttribute("data-nextPlayer", nextPlayer);
+    console.log(board.getAttribute("data-nextPlayer"))
+    evaluateNextPlayer();
+    showBoard();
 }
 
 window.addEventListener('DOMContentLoaded', () => {
     initGame()
+    document.body.addEventListener("click", () => {
+        if ("field,piece".includes(event.target.classList)) {
+            // fixme: dont use event (Deprecated symbol used, consult docs for better alternative)
+            const row = event.target.dataset.row
+            const col = event.target.dataset.col
+            evaluateClickedField(row, col)
+        }
+    });
 
-    setInterval(() => {
-        insertOrRemoveFigureAtRandomPlace("r")
-        insertOrRemoveFigureAtRandomPlace("b")
+    document.getElementById("btnReset").addEventListener("click", () => {
+        initState()
         showBoard()
-    }, 1000)
+        evaluateNextPlayer()
+    })
 
 });
 
