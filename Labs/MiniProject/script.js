@@ -21,7 +21,7 @@ showBoard = () => {
             const fieldElement = elt("div", {"class": classes, "data-row": rowIndex, "data-col": fieldIndex});
             if (field !== "" && "rb".includes(field)) {
                 const colorClass = field === "r" ? "red" : "blue"
-                const piece = elt("div", {class: colorClass + " piece"})
+                const piece = elt("div", {class: colorClass + " piece", style: "z-index:-1"})
                 fieldElement.appendChild(piece)
             }
             return fieldElement
