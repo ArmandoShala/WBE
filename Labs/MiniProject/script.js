@@ -103,24 +103,3 @@ window.addEventListener('DOMContentLoaded', () => {
     })
 
 });
-
-//  Get current state from server and re-draw board
-//
-function loadState () {
-
-    // ...
-    // your implementation
-    // ...
-
-}
-
-//  Put current state to server
-//
-function saveState () {
-
-    // ...
-    // your implementation
-    // ...
-
-}
-
