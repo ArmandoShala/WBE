@@ -1,4 +1,8 @@
-let state = undefined;
+const SERVICE = "http://localhost:3000/api/data/c4state?api-key=c4game"
+let state = {
+    board: [],
+    nextPlayer: "red"
+};
 let nextPlayer = undefined
 let board = undefined;
 
@@ -15,7 +19,7 @@ function elt(type, attrs, ...children) {
 }
 
 showBoard = () => {
-    const rows = state.map((row, rowIndex) => {
+    const rows = state.board.map((row, rowIndex) => {
         const fields = row.map((field, fieldIndex) => {
             const classes = "field"
             const fieldElement = elt("div", {"class": classes, "data-row": rowIndex, "data-col": fieldIndex});
@@ -47,37 +51,36 @@ function initGame() {
  */
 function insertOrRemoveFigureAtRandomPlace(color) {
     // this method is not used in the current version of the game, but it may be useful in the future to implement a bot
-    const row = Math.floor(Math.random() * state.length)
-    const col = Math.floor(Math.random() * state[0].length)
+    const row = Math.floor(Math.random() * state.board)
+    const col = Math.floor(Math.random() * state.board[0].length)
     state[row][col] = state[row][col] === "" ? color[0] : ""
 }
 
 initState = (rows = 6, cols = 7) => {
-    state = Array(rows).fill('').map(_ => Array(cols).fill(''))
+    state.board = Array(rows).fill('').map(_ => Array(cols).fill(''))
+    state.nextPlayer = "red"
 }
 
 evaluateNextPlayer = () => {
-    nextPlayer = board.getAttribute("data-nextPlayer") === "red" ? "blue" : "red"
+    nextPlayer = nextPlayer === "red" ? "blue" : "red"
     document.getElementById("nextPlayer").innerHTML = nextPlayer;
     document.getElementById("nextPlayer").style.color = nextPlayer;
 }
 
 evaluateClickedField = (row, col) => {
-    if (state[row][col] !== "") {
+    if (state.board[row][col] !== "") {
         alert("Field is already occupied!");
         return;
     }
 
     // fixme: optimize this loop
-    for (let i = state.length - 1; i >= 0; i--) {
-        if (state[i][col] === "") {
-            state[i][col] = nextPlayer[0];
+    for (let i = state.board.length - 1; i >= 0; i--) {
+        if (state.board[i][col] === "") {
+            state.board[i][col] = nextPlayer[0];
             break;
         }
     }
 
-    board.setAttribute("data-nextPlayer", nextPlayer);
-    console.log(board.getAttribute("data-nextPlayer"))
     evaluateNextPlayer();
     showBoard();
 }
@@ -100,4 +103,24 @@ window.addEventListener('DOMContentLoaded', () => {
     })
 
 });
+
+//  Get current state from server and re-draw board
+//
+function loadState () {
+
+    // ...
+    // your implementation
+    // ...
+
+}
+
+//  Put current state to server
+//
+function saveState () {
+
+    // ...
+    // your implementation
+    // ...
+
+}
 
