@@ -39,8 +39,6 @@ function initGame () {
 function showBoard () {
   let board = document.querySelector(".board")
 
-  // first remove all fields
-  // while (board.firstChild) { board.removeChild(board.firstChild) }
   board.innerHTML = ""
 
   const rows = state.board.map((row, rowIndex) => {
@@ -101,7 +99,7 @@ evaluateClickedField = (row, col) => {
   // fixme: optimize this loop
   for (let i = state.board.length - 1; i >= 0; i--) {
     if (state.board[i][col] === "") {
-      state.board[i][col] = nextPlayer[0];
+      state.board[i][col] = state.next[0];
       break;
     }
   }
@@ -111,9 +109,9 @@ evaluateClickedField = (row, col) => {
 }
 
 evaluateNextPlayer = () => {
-  nextPlayer = nextPlayer === "red" ? "blue" : "red"
-  document.getElementById("nextPlayer").innerHTML = nextPlayer;
-  document.getElementById("nextPlayer").style.color = nextPlayer;
+  state.next = state.next === "red" ? "blue" : "red"
+  document.getElementById("nextPlayer").innerHTML = state.next;
+  document.getElementById("nextPlayer").style.color = state.next;
 }
 
 
