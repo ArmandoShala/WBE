@@ -3,7 +3,7 @@ let state = {
     board: [],
     nextPlayer: "red"
 };
-let nextPlayer = undefined
+let next = undefined
 let board = undefined;
 
 function elt(type, attrs, ...children) {
@@ -62,9 +62,9 @@ initState = (rows = 6, cols = 7) => {
 }
 
 evaluateNextPlayer = () => {
-    nextPlayer = nextPlayer === "red" ? "blue" : "red"
-    document.getElementById("nextPlayer").innerHTML = nextPlayer;
-    document.getElementById("nextPlayer").style.color = nextPlayer;
+    next = next === "red" ? "blue" : "red"
+    document.getElementById("nextPlayer").innerHTML = next;
+    document.getElementById("nextPlayer").style.color = next;
 }
 
 evaluateClickedField = (row, col) => {
@@ -76,7 +76,7 @@ evaluateClickedField = (row, col) => {
     // fixme: optimize this loop
     for (let i = state.board.length - 1; i >= 0; i--) {
         if (state.board[i][col] === "") {
-            state.board[i][col] = nextPlayer[0];
+            state.board[i][col] = next[0];
             break;
         }
     }
@@ -85,14 +85,19 @@ evaluateClickedField = (row, col) => {
     showBoard();
 }
 
-window.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     initGame()
     document.body.addEventListener("click", () => {
         if ("field,piece".includes(event.target.classList)) {
             // fixme: dont use event (Deprecated symbol used, consult docs for better alternative)
             const row = event.target.dataset.row
             const col = event.target.dataset.col
-            evaluateClickedField(row, col)
+            evaluateClickedField(row, col);
+            if (connect4Winner(next, state.board)) {
+                alert("Winner is " + next);
+                // initState();
+                // showBoard();
+            }
         }
     });
 

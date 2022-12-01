@@ -4,12 +4,15 @@
   "description": "Desc",
   "main": "script.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jasmine"
   },
+  "type": "module",
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "jasmine": "^4.5.0"
   }
 }

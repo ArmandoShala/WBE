@@ -1,170 +1,174 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Vier gewinnt</title>
-  <link rel="stylesheet" href="styles.css">
-  <script>
+    <meta charset="UTF-8">
+    <title>Vier gewinnt</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="../"></script>
+    <script>
 
-/*
- *  This solution sould be considered as a proof of concept – the code 
- *  definitely needs some cleanup and documentation
- */
- 
-let state = {
-  board: [
-    [ '', '', '', '', '', '', '' ],
-    [ '', '', '', '', '', '', '' ],
-    [ '', '', '', '', '', '', '' ],
-    [ '', '', '', '', '', '', '' ],
-    [ '', '', '', '', '', '', '' ],
-    [ '', '', '', '', '', '', '' ]
-  ],
-  next: 'b'
-}
+        /*
+         *  This solution sould be considered as a proof of concept – the code
+         *  definitely needs some cleanup and documentation
+         */
 
-const SERVICE = "http://localhost:3000/api/data/c4state?api-key=c4game"
+        let state = {
+            board: [
+                ['', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', ''],
+                ['', '', '', '', '', '', '']
+            ],
+            next: 'b'
+        }
 
-
-//  Initialize game
-//
-function initGame () {
-  let board = showBoard()
-  attachEventHandler(board)
-}
+        const SERVICE = "http://localhost:3000/api/data/c4state?api-key=c4game"
 
 
-//  Show board
-// 
-function showBoard () {
-  let board = document.querySelector(".board")
-
-  board.innerHTML = ""
-
-  const rows = state.board.map((row, rowIndex) => {
-    const fields = row.map((field, fieldIndex) => {
-      const classes = "field"
-      const fieldElement = elt("div", {"class": classes, "data-row": rowIndex, "data-col": fieldIndex});
-      if (field !== "" && "rb".includes(field)) {
-        const colorClass = field === "r" ? "red" : "blue"
-        const piece = elt("div", {class: colorClass + " piece", style: "z-index:-1"})
-        fieldElement.appendChild(piece)
-      }
-      return fieldElement
-    })
-    return elt("div", {class: "row"}, ...fields)
-  })
-  board.append(...rows)
-
-  return board
-}
+        //  Initialize game
+        //
+        function initGame() {
+            let board = showBoard()
+            attachEventHandler(board)
+        }
 
 
-//  Helper function for DOM manipulation
-// 
-function elt (type, attrs, ...children) {
-  let node = document.createElement(type)
-  for (a in attrs) {
-    node.setAttribute(a, attrs[a])
-  }
-  for (let child of children) {
-    if (typeof child != "string") node.appendChild(child)
-    else node.appendChild(document.createTextNode(child))
-  }
-  return node
-}
+        //  Show board
+        //
+        function showBoard() {
+            let board = document.querySelector(".board")
+
+            board.innerHTML = ""
+
+            const rows = state.board.map((row, rowIndex) => {
+                const fields = row.map((field, fieldIndex) => {
+                    const classes = "field"
+                    const fieldElement = elt("div", {"class": classes, "data-row": rowIndex, "data-col": fieldIndex});
+                    if (field !== "" && "rb".includes(field)) {
+                        const colorClass = field === "r" ? "red" : "blue"
+                        const piece = elt("div", {class: colorClass + " piece", style: "z-index:-1"})
+                        fieldElement.appendChild(piece)
+                    }
+                    return fieldElement
+                })
+                return elt("div", {class: "row"}, ...fields)
+            })
+            board.append(...rows)
+
+            return board
+        }
 
 
-//  Attach event handler to board
-//
-function attachEventHandler (board) {
-  board.addEventListener("click", (e) => {
-
-    // fixme: dont use event (Deprecated symbol used, consult docs for better alternative)
-    const row = event.target.dataset.row
-    const col = event.target.dataset.col
-    evaluateClickedField(row, col)
-     
-    showBoard()
-  })
-}
-
-
-evaluateClickedField = (row, col) => {
-  if (state.board[row][col] !== "") {
-    alert("Field is already occupied!");
-    return;
-  }
-
-  // fixme: optimize this loop
-  for (let i = state.board.length - 1; i >= 0; i--) {
-    if (state.board[i][col] === "") {
-      state.board[i][col] = state.next[0];
-      break;
-    }
-  }
-
-  evaluateNextPlayer();
-  showBoard();
-}
-
-evaluateNextPlayer = () => {
-  state.next = state.next === "red" ? "blue" : "red"
-  document.getElementById("nextPlayer").innerHTML = state.next;
-  document.getElementById("nextPlayer").style.color = state.next;
-}
+        //  Helper function for DOM manipulation
+        //
+        function elt(type, attrs, ...children) {
+            let node = document.createElement(type)
+            for (a in attrs) {
+                node.setAttribute(a, attrs[a])
+            }
+            for (let child of children) {
+                if (typeof child != "string") node.appendChild(child)
+                else node.appendChild(document.createTextNode(child))
+            }
+            return node
+        }
 
 
-//  Get current state from server and re-draw board
-//
-function loadState () {
-fetch(SERVICE)
-    .then(response => response.json())
-    .then(data => {
-      state = data
-      showBoard()
-    })
-}
+        //  Attach event handler to board
+        //
+        function attachEventHandler(board) {
+            board.addEventListener("click", (e) => {
 
-//  Put current state to server
-//
-function saveState () {
-    fetch(SERVICE, {
-        method: "PUT",
-        headers: {
-        "Content-Type": "application/json"
-        },
-        body: JSON.stringify(state)
-    })
-}
+                // fixme: dont use event (Deprecated symbol used, consult docs for better alternative)
+                const row = event.target.dataset.row
+                const col = event.target.dataset.col
+                evaluateClickedField(row, col)
+
+                showBoard()
+                var winner = connect4WinnerNEW();
+                if (winner) {
+                    alert("Winner is " + state.next + "!")
+                }
+            })
+        }
 
 
-window.addEventListener('DOMContentLoaded', () => {
-  document.getElementById("btnReset").addEventListener("click", () => {
-    initState()
-    showBoard()
-    evaluateNextPlayer()
-  })
-});
+        evaluateClickedField = (row, col) => {
+            if (state.board[row][col] !== "") {
+                alert("Field is already occupied!");
+                return;
+            }
+
+            // fixme: optimize this loop
+            for (let i = state.board.length - 1; i >= 0; i--) {
+                if (state.board[i][col] === "") {
+                    state.board[i][col] = state.next[0];
+                    break;
+                }
+            }
+
+            evaluateNextPlayer();
+            showBoard();
+        }
+
+        evaluateNextPlayer = () => {
+            state.next = state.next === "red" ? "blue" : "red"
+            document.getElementById("nextPlayer").innerHTML = state.next;
+            document.getElementById("nextPlayer").style.color = state.next;
+        }
 
 
+        //  Get current state from server and re-draw board
+        //
+        function loadState() {
+            fetch(SERVICE)
+                .then(response => response.json())
+                .then(data => {
+                    state = data
+                    showBoard()
+                })
+        }
 
-  </script>
+        //  Put current state to server
+        //
+        function saveState() {
+            fetch(SERVICE, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(state)
+            })
+        }
+
+
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById("btnReset").addEventListener("click", () => {
+                initState()
+                showBoard()
+                evaluateNextPlayer()
+            })
+        });
+
+
+    </script>
 
 </head>
 <body>
-  <p>It's <span id="nextPlayer"></span>'s turn</p>
-  <div class="board"></div>
-  
-  <div class="controls">
+<p>It's <span id="nextPlayer"></span>'s turn</p>
+<div class="board"></div>
+
+<div class="controls">
     <button onclick="loadState()">Load</button>
     <button onclick="saveState()">Save</button>
-  </div>
+</div>
 
-  <script>
+<script>
     initGame()
-  </script>
+</script>
 
-  <button type="button" class="btn btn-primary" id="btnReset">Neues Spiel</button>
+<button type="button" class="btn btn-primary" id="btnReset">Neues Spiel</button>
 </body>
 </html>
