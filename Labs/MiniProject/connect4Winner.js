@@ -1,5 +1,6 @@
 export function connect4Winner(color, board) {
     // check for horizontal win
+    console.log("Check horizontal");
     for (let row = 0; row < board.length; row++) {
         for (let col = 0; col < board[row].length - 3; col++) {
             if (board[row][col] === color && board[row][col + 1] === color && board[row][col + 2] === color && board[row][col + 3] === color) {
@@ -7,7 +8,10 @@ export function connect4Winner(color, board) {
             }
         }
     }
+    console.log("Horizontal checked");
 
+
+    console.log("Check vertical");
 // check for vertical win
     for (let row = 0; row < board.length - 3; row++) {
         for (let col = 0; col < board[row].length; col++) {
@@ -16,6 +20,9 @@ export function connect4Winner(color, board) {
             }
         }
     }
+    console.log("vertical checked");
+
+    console.log("Check diagonal");
 
 // check for diagonal win
     for (let row = 0; row < board.length - 3; row++) {
@@ -25,7 +32,9 @@ export function connect4Winner(color, board) {
             }
         }
     }
+    console.log("diagonal checked");
 
+    console.log("Check anti diagonal");
 // check for anti diagonal win
     for (let row = 0; row < board.length - 3; row++) {
         for (let col = 3; col < board[row].length; col++) {
@@ -34,6 +43,7 @@ export function connect4Winner(color, board) {
             }
         }
     }
+    console.log("anti diagonal checked");
 
     return false
 }
