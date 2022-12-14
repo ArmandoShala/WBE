@@ -32,11 +32,11 @@
             border: 5px solid black;
         }
 
-        .red-piece {
+        .orange-piece {
             background-color: orange;
         }
 
-        .yellow-piece {
+        .green-piece {
             background-color: forestgreen;
         }
 
@@ -45,9 +45,9 @@
     <script>
 
 
-        var playerRed = "R";
-        var playerYellow = "Y";
-        var currPlayer = playerRed;
+        var playerOrange = "O";
+        var playerGreen = "G";
+        var currPlayer = playerOrange;
 
         var gameOver = false;
         var board;
@@ -99,13 +99,13 @@
 
             board[r][c] = currPlayer; //update JS board
             let tile = document.getElementById(r.toString() + "-" + c.toString());
-            if (currPlayer == playerRed) {
-                tile.classList.add("red-piece");
-                currPlayer = playerYellow;
+            if (currPlayer == playerOrange) {
+                tile.classList.add("orange-piece");
+                currPlayer = playerGreen;
             }
             else {
-                tile.classList.add("yellow-piece");
-                currPlayer = playerRed;
+                tile.classList.add("green-piece");
+                currPlayer = playerOrange;
             }
 
             r -= 1; //update the row height for that column
@@ -166,10 +166,10 @@
 
         function setWinner(r, c) {
             let winner = document.getElementById("winner");
-            if (board[r][c] == playerRed) {
-                winner.innerText = "Red Wins";
+            if (board[r][c] == playerOrange) {
+                winner.innerText = "Orange Wins";
             } else {
-                winner.innerText = "Yellow Wins";
+                winner.innerText = "Green Wins";
             }
             gameOver = true;
         }
@@ -180,5 +180,6 @@
 <h1>Connect 4</h1>
 <h2 id="winner"></h2>
 <div id="board"></div>
+<button onclick="location.reload()">Restart</button>
 </body>
 </html>
