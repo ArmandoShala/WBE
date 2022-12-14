@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <title>Vier gewinnt</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="../"></script>
-    <script>
+    <script defer>
 
         /*
          *  This solution sould be considered as a proof of concept – the code
@@ -27,8 +26,6 @@
         const SERVICE = "http://localhost:3000/api/data/c4state?api-key=c4game"
 
 
-        //  Initialize game
-        //
         function initGame() {
             let board = showBoard()
             attachEventHandler(board)
@@ -87,11 +84,11 @@
                 evaluateClickedField(row, col)
 
                 showBoard()
-                var winner = connect4WinnerNEW();
+                var winner = connect4Winner(state.next, state.board);
                 if (winner) {
                     alert("Winner is " + state.next + "!")
                 }
-            })
+            });
         }
 
 
@@ -145,12 +142,45 @@
 
 
         window.addEventListener('DOMContentLoaded', () => {
-            document.getElementById("btnReset").addEventListener("click", () => {
-                initState()
-                showBoard()
-                evaluateNextPlayer()
-            })
+
         });
+
+
+
+
+        function connect4Winner(color, board) {
+            for (let row = 0; row < board.length; row++) {
+                for (let col = 0; col < board[row].length - 3; col++) {
+                    if (board[row][col] === color && board[row][col + 1] === color && board[row][col + 2] === color && board[row][col + 3] === color) {
+                        return true;
+                    }
+                }
+            }
+            for (let row = 0; row < board.length - 3; row++) {
+                for (let col = 0; col < board[row].length; col++) {
+                    if (board[row][col] === color && board[row + 1][col] === color && board[row + 2][col] === color && board[row + 3][col] === color) {
+                        return true;
+                    }
+                }
+            }
+            for (let row = 0; row < board.length - 3; row++) {
+                for (let col = 0; col < board[row].length - 3; col++) {
+                    if (board[row][col] === color && board[row + 1][col + 1] === color && board[row + 2][col + 2] === color && board[row + 3][col + 3] === color) {
+                        return true;
+                    }
+                }
+            }
+            for (let row = 0; row < board.length - 3; row++) {
+                for (let col = 3; col < board[row].length; col++) {
+                    if (board[row][col] === color && board[row + 1][col - 1] === color && board[row + 2][col - 2] === color && board[row + 3][col - 3] === color) {
+                        return true;
+                    }
+                }
+            }
+            return false
+        }
+
+
 
 
     </script>
@@ -168,6 +198,7 @@
 <script>
     initGame()
 </script>
+<script type="module" src="index.js" defer></script>
 
 <button type="button" class="btn btn-primary" id="btnReset">Neues Spiel</button>
 </body>

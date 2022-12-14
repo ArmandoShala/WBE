@@ -2,13 +2,14 @@
   "name": "expresso",
   "version": "1.0.0",
   "description": "Express Demo Project",
-  "main": "index.js",
+  "main": "public/index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node public/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "your name",
   "license": "ISC",
+  "type": "module",
   "dependencies": {
     "express": "^4.17.1"
   }

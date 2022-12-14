@@ -3,26 +3,24 @@
  *  WBE-Praktikum
  */
 
-var express = require('express')
+// var express = require('express')
+
+import express from 'express';
+
 var app = express()
 var gameState = Array(6).fill('').map(_ => Array(7).fill(''))
 
 //  Fehlerobjekt anlegen
-//
 function error(status, msg) {
   var err = new Error(msg)
   err.status = status
   return err
 }
 
-//  Zufällige ID erzeugen, Quelle:
-//  https://stackoverflow.com/questions/6860853/generate-random-string-for-div-id#6860916
-//
 function guidGenerator() {
-  var S4 = function() {
-    return (((1+Math.random())*0x10000)|0).toString(16).substring(1)
-  }
-  return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4())
+  // Generator by https://stackoverflow.com/questions/6860853/generate-random-string-for-div-id#6860916
+  var guidPart = () => (((1+Math.random())*0x10000)|0).toString(16).substring(1)
+  return (guidPart()+guidPart()+"-"+guidPart()+"-"+guidPart()+"-"+guidPart()+"-"+guidPart()+guidPart()+guidPart())
 }
 
 //  Statische Dateien im Verzeichnis public
@@ -53,7 +51,7 @@ app.use(express.json())
 var apiKeys = ['wbeweb', 'c4game']
 
 //  unsere tolle in-memory Datenbank
-var data = {1234567890: {demodata: "wbe is an inspiring challenge"}, 654213619: gameState}
+var data = {1234567890: {demodata: "wbe is an inspiring challenge"}, 42069: gameState}
 
 //  GET-Request bearbeiten
 //
