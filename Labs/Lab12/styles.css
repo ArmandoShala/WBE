@@ -1,0 +1,35 @@
+* {
+  box-sizing: border-box;
+  font-family:  sans-serif;
+}
+
+.playground {
+  width: 84vmin;
+  margin: auto;
+  outline: 3px solid darkblue;
+  border-radius: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  background: darkblue;
+}
+
+.field {
+  border-radius: 100%;
+  border: 3px solid gold;
+  background: white;
+  width: 12vmin;
+  height: 12vmin;
+}
+
+.piece {
+  height: 100%;
+  border-radius: 50%;
+}
+
+.blue {
+  background-color: black;
+}
+
+.red {
+  background-color: red;
+}
